@@ -1,0 +1,290 @@
+/* ==========================================================================
+   FOGO · estilo
+   Direção "Brasa": carvão e papel em blocos que se alternam, tipografia
+   gigante em peso leve, rótulos em mono nos quatro cantos, laranja de brasa
+   só no que é fogo.
+   ========================================================================== */
+
+:root {
+  /* Cores: troque aqui e a página inteira acompanha */
+  --carvao: #0d0b0a;        /* fundo do bloco 1 (ASCII) */
+  --carvao-fundo: #0a0807;  /* fundo do bloco 3 (alta resolução) */
+  --papel: #ece3d2;         /* fundo dos blocos claros */
+  --tinta: #1a1512;         /* texto sobre o papel */
+  --osso: #f3ead9;          /* texto sobre o carvão */
+  --osso-fraco: rgba(243, 234, 217, 0.78);   /* rótulos sobre o carvão */
+  --tinta-fraca: rgba(26, 21, 18, 0.78);     /* rótulos sobre o papel */
+  --brasa: #ff5a1f;         /* laranja do fogo (só em foco e detalhes) */
+  --brasa-texto: #b8330a;   /* a mesma brasa, escura o bastante para texto no papel */
+
+  /* Espaçamento: escala única */
+  --e1: 4px;
+  --e2: 8px;
+  --e3: 12px;
+  --e4: 16px;
+  --e5: 24px;
+  --e6: 32px;
+  --e7: 48px;
+  --e8: 64px;
+  --e9: 96px;
+
+  /* Tipografia */
+  --fonte-titulo: "Unbounded", "Arial Black", system-ui, sans-serif;
+  --fonte-mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+body {
+  margin: 0;
+  background: var(--carvao);
+  color: var(--osso);
+  font-family: var(--fonte-mono);
+  font-size: 1rem;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- Peças comuns ---------- */
+
+.bloco {
+  position: relative;
+  overflow: hidden;
+}
+
+.rotulo {
+  margin: 0;
+  font-family: var(--fonte-mono);
+  font-size: 12px;
+  line-height: 1.4;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.gigante {
+  margin: 0;
+  font-family: var(--fonte-titulo);
+  font-weight: 300;
+  line-height: 0.88;
+  letter-spacing: -0.03em;
+}
+
+.apoio {
+  margin: 0;
+  max-width: 38ch;
+  font-size: 1.125rem;
+}
+
+.so-leitor {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+a:focus-visible {
+  outline: 2px solid var(--brasa-texto);
+  outline-offset: 4px;
+}
+
+/* Rótulos fixos nos quatro cantos de um bloco escuro */
+.hud {
+  position: absolute;
+  z-index: 2;
+  margin: 0;
+  color: var(--osso-fraco);
+  pointer-events: none;
+}
+/* sobre o fogo em ASCII o rótulo ganha um fundo, senão as letras de fogo passam por trás dele */
+.bloco-ascii .hud {
+  padding: var(--e1) var(--e2);
+  background: rgba(13, 11, 10, 0.86);
+}
+.hud-se { top: var(--e6); left: var(--e6); }
+.hud-sd { top: var(--e6); right: var(--e6); text-align: right; }
+.hud-ie { bottom: var(--e6); left: var(--e6); }
+.hud-id { bottom: var(--e6); right: var(--e6); text-align: right; }
+
+/* ---------- 1 · ASCII ---------- */
+
+.bloco-ascii {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e6);
+  min-height: 100vh;
+  padding: 12vh 4vw var(--e9);
+  background: var(--carvao);
+}
+
+#cv-ascii {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.bloco-ascii .gigante {
+  position: relative;
+  z-index: 1;
+  font-size: min(21vw, 46vh);
+  color: var(--osso);
+  pointer-events: none;
+}
+
+.bloco-ascii .apoio {
+  position: relative;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ---------- 2 · Pixel art ---------- */
+
+.bloco-pixel {
+  padding: var(--e9) 4vw var(--e9);
+  background: var(--papel);
+  color: var(--tinta);
+}
+
+.pixel-topo {
+  display: grid;
+  grid-template-columns: 1fr minmax(240px, 40ch);
+  grid-template-areas:
+    "rotulo rotulo"
+    "titulo apoio";
+  align-items: end;
+  column-gap: var(--e7);
+  row-gap: var(--e5);
+}
+
+.pixel-topo .rotulo { grid-area: rotulo; color: var(--brasa-texto); }
+.pixel-topo .gigante { grid-area: titulo; font-size: min(14vw, 32vh); }
+.pixel-topo .apoio { grid-area: apoio; padding-bottom: var(--e3); }
+
+.moldura {
+  width: fit-content;
+  margin: var(--e8) auto 0;
+}
+
+#cv-pixel {
+  display: block;
+  border: 3px solid var(--tinta);
+  background: #0b0a16;
+  image-rendering: pixelated;
+  cursor: crosshair;
+}
+
+.legenda {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--e5);
+  padding-top: var(--e3);
+  color: var(--tinta-fraca);
+}
+
+/* ---------- 3 · Alta resolução ---------- */
+
+.bloco-alta {
+  height: 100vh;
+  min-height: 640px;
+  background: var(--carvao-fundo);
+}
+
+#cv-alta {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  cursor: none;
+}
+
+.aviso-sem-webgl[hidden] { display: none; }
+
+.aviso-sem-webgl {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  padding: var(--e7);
+  text-align: center;
+  font-size: 1.125rem;
+}
+
+/* ---------- Rodapé ---------- */
+
+.bloco-rodape {
+  padding: var(--e9) 4vw var(--e6);
+  background: var(--papel);
+  color: var(--tinta);
+}
+
+.specs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--e7);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.specs li {
+  padding-top: var(--e5);
+  border-top: 1px solid var(--tinta);
+}
+
+.specs .rotulo { color: var(--brasa-texto); }
+
+.numero {
+  margin: var(--e5) 0 var(--e4);
+  font-family: var(--fonte-titulo);
+  font-weight: 300;
+  font-size: clamp(40px, 5vw, 120px);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.nota {
+  margin: 0;
+  max-width: 34ch;
+}
+
+.rodape-base {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--e5);
+  margin-top: var(--e9);
+  color: var(--tinta-fraca);
+}
+
+.rodape-base a {
+  color: var(--tinta);
+  text-underline-offset: 4px;
+}
+
+/* ---------- Telas estreitas (monitor em pé e janela pequena) ---------- */
+
+@media (max-width: 900px) {
+  .pixel-topo {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "rotulo"
+      "titulo"
+      "apoio";
+  }
+  .specs { grid-template-columns: 1fr; }
+  .hud-se, .hud-sd { top: var(--e5); }
+  .hud-ie, .hud-id { bottom: var(--e5); }
+  .hud-se, .hud-ie { left: var(--e5); }
+  .hud-sd, .hud-id { right: var(--e5); }
+}

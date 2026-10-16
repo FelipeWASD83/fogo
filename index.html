@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fogo em três resoluções</title>
+<meta name="description" content="O mesmo fogo em ASCII, em pixel art e em alta resolução, tudo animado ao vivo e com reação ao mouse.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Unbounded:wght@300;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+
+<!-- 1 · ASCII (bloco escuro) -->
+<section class="bloco bloco-ascii" id="topo" aria-labelledby="t-ascii">
+  <canvas id="cv-ascii" aria-hidden="true"></canvas>
+  <p class="hud hud-se rotulo">[ 01 / 03 ] ASCII</p>
+  <p class="hud hud-sd rotulo" id="info-ascii">grade de caracteres</p>
+  <h1 class="gigante" id="t-ascii">FOGO</h1>
+  <p class="apoio">O mesmo fogo, em três resoluções. Passe o mouse por cima e ele pega.</p>
+  <p class="hud hud-ie rotulo">[ mouse: acende ]</p>
+  <p class="hud hud-id rotulo">[ role para baixo ]</p>
+</section>
+
+<!-- 2 · Pixel art (bloco claro) -->
+<section class="bloco bloco-pixel" aria-labelledby="t-pixel">
+  <div class="pixel-topo">
+    <p class="rotulo">[ 02 / 03 ] PIXEL ART</p>
+    <h2 class="gigante" id="t-pixel">160×90</h2>
+    <p class="apoio">Quatorze mil e quatrocentos pixels, poucas cores e sombra pontilhada, como num jogo de 16 bits. O brilho da fogueira também sobe pelas pedras, pelos pinheiros e pelo chão.</p>
+  </div>
+  <figure class="moldura">
+    <canvas id="cv-pixel" width="160" height="90" role="img" aria-label="Fogueira em pixel art à noite, com lua, estrelas, pinheiros, pedras e faíscas subindo"></canvas>
+    <figcaption class="rotulo legenda">
+      <span>[ mouse: vento · clique: faíscas ]</span>
+      <span id="info-pixel">160 × 90 pixels</span>
+    </figcaption>
+  </figure>
+</section>
+
+<!-- 3 · Alta resolução (bloco escuro) -->
+<section class="bloco bloco-alta" aria-labelledby="t-alta">
+  <h2 class="so-leitor" id="t-alta">Alta resolução</h2>
+  <canvas id="cv-alta" aria-hidden="true"></canvas>
+  <p class="aviso-sem-webgl" id="sem-webgl" hidden>Este navegador não abriu o WebGL, então o fogo em alta resolução não roda aqui.</p>
+  <p class="hud hud-se rotulo">[ 03 / 03 ] ALTA RESOLUÇÃO</p>
+  <p class="hud hud-sd rotulo" id="info-alta">cada pixel da tela é calculado</p>
+  <p class="hud hud-ie rotulo">[ mouse: tocha e vento ]</p>
+  <p class="hud hud-id rotulo" id="fps-alta">[ medindo ]</p>
+</section>
+
+<!-- Rodapé (bloco claro) -->
+<footer class="bloco bloco-rodape">
+  <ol class="specs">
+    <li>
+      <p class="rotulo">01 · ASCII</p>
+      <p class="numero" id="spec-ascii">0 × 0</p>
+      <p class="nota">células, uma letra em cada uma. A letra e a cor vêm só do calor.</p>
+    </li>
+    <li>
+      <p class="rotulo">02 · PIXEL ART</p>
+      <p class="numero">160 × 90</p>
+      <p class="nota">pixels, seis níveis por cor e pontilhado 4 × 4. Chamas com oito cores.</p>
+    </li>
+    <li>
+      <p class="rotulo">03 · ALTA RESOLUÇÃO</p>
+      <p class="numero" id="spec-alta">0 × 0</p>
+      <p class="nota">pixels calculados na placa de vídeo, a cada quadro, sem imagem pronta.</p>
+    </li>
+  </ol>
+  <div class="rodape-base rotulo">
+    <span>FOGO · v1.0.0 · 16/10/2026</span>
+    <a href="#topo">[ voltar ao topo ↑ ]</a>
+  </div>
+</footer>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
