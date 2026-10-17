@@ -1,18 +1,21 @@
 /* ==========================================================================
-   FOGO · estilo
+   FOGO E OUTROS EFEITOS · estilo
    Direção "Brasa": carvão e papel em blocos que se alternam, tipografia
    gigante em peso leve, rótulos em mono nos quatro cantos, laranja de brasa
-   só no que é fogo.
+   só no que é fogo ou detalhe.
+   Ordem dos blocos (claro e escuro se alternam, rodapé incluso):
+   escuro, claro, escuro, claro, escuro, claro, escuro, claro.
    ========================================================================== */
 
 :root {
   /* Cores: troque aqui e a página inteira acompanha */
-  --carvao: #0d0b0a;        /* fundo do bloco 1 (ASCII) */
-  --carvao-fundo: #0a0807;  /* fundo do bloco 3 (alta resolução) */
+  --carvao: #0d0b0a;        /* fundo do ASCII e do fluxo */
+  --carvao-fundo: #0a0807;  /* fundo do fogo em alta resolução */
+  --noite: #04070b;         /* fundo da aurora */
   --papel: #ece3d2;         /* fundo dos blocos claros */
   --tinta: #1a1512;         /* texto sobre o papel */
   --osso: #f3ead9;          /* texto sobre o carvão */
-  --osso-fraco: rgba(243, 234, 217, 0.78);   /* rótulos sobre o carvão */
+  --osso-fraco: rgba(243, 234, 217, 0.78);   /* rótulos sobre o escuro */
   --tinta-fraca: rgba(26, 21, 18, 0.78);     /* rótulos sobre o papel */
   --brasa: #ff5a1f;         /* laranja do fogo (só em foco e detalhes) */
   --brasa-texto: #b8330a;   /* a mesma brasa, escura o bastante para texto no papel */
@@ -58,6 +61,18 @@ body {
   overflow: hidden;
 }
 
+.escuro {
+  color: var(--osso);
+  --rotulo-cor: var(--osso-fraco);
+  --placa-hud: rgba(13, 11, 10, 0.86);
+}
+
+.claro {
+  color: var(--tinta);
+  --rotulo-cor: var(--tinta-fraca);
+  --placa-hud: rgba(236, 227, 210, 0.9);
+}
+
 .rotulo {
   margin: 0;
   font-family: var(--fonte-mono);
@@ -81,50 +96,38 @@ body {
   font-size: 1.125rem;
 }
 
-.so-leitor {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-}
-
 a:focus-visible {
   outline: 2px solid var(--brasa-texto);
   outline-offset: 4px;
 }
 
-/* Rótulos fixos nos quatro cantos de um bloco escuro */
+/* Rótulos fixos nos quatro cantos de um bloco; ganham um fundo para ficarem legíveis sobre o efeito */
 .hud {
   position: absolute;
   z-index: 2;
   margin: 0;
-  color: var(--osso-fraco);
-  pointer-events: none;
-}
-/* sobre o fogo em ASCII o rótulo ganha um fundo, senão as letras de fogo passam por trás dele */
-.bloco-ascii .hud {
   padding: var(--e1) var(--e2);
-  background: rgba(13, 11, 10, 0.86);
+  color: var(--rotulo-cor);
+  background: var(--placa-hud);
+  pointer-events: none;
 }
 .hud-se { top: var(--e6); left: var(--e6); }
 .hud-sd { top: var(--e6); right: var(--e6); text-align: right; }
 .hud-ie { bottom: var(--e6); left: var(--e6); }
 .hud-id { bottom: var(--e6); right: var(--e6); text-align: right; }
 
-/* ---------- 1 · ASCII ---------- */
+/* ---------- Blocos de tela cheia (todos os efeitos, menos o pixel art do 2) ---------- */
 
-.bloco-ascii {
+.bloco-tela {
   display: flex;
   flex-direction: column;
   gap: var(--e6);
-  min-height: 100vh;
+  height: 100vh;
+  min-height: 640px;
   padding: 12vh 4vw var(--e9);
-  background: var(--carvao);
 }
 
-#cv-ascii {
+.tela-canvas {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -132,26 +135,33 @@ a:focus-visible {
   display: block;
 }
 
-.bloco-ascii .gigante {
+.titulo-tela {
   position: relative;
   z-index: 1;
   font-size: min(21vw, 46vh);
-  color: var(--osso);
   pointer-events: none;
 }
 
-.bloco-ascii .apoio {
+/* "RESOLUÇÃO" tem nove letras: cabe com menos corpo */
+.titulo-longo { font-size: min(10.4vw, 30vh); }
+
+.bloco-tela .apoio {
   position: relative;
   z-index: 1;
   pointer-events: none;
 }
+
+/* sombra para o texto ficar legível quando o efeito passa por trás */
+.escuro .apoio { text-shadow: 0 0 14px rgba(0, 0, 0, 0.95), 0 0 4px rgba(0, 0, 0, 0.9); }
+.claro .apoio { text-shadow: 0 0 14px rgba(236, 227, 210, 0.95), 0 0 4px rgba(236, 227, 210, 0.9); }
+
+.bloco-ascii { background: var(--carvao); }
 
 /* ---------- 2 · Pixel art ---------- */
 
 .bloco-pixel {
   padding: var(--e9) 4vw var(--e9);
   background: var(--papel);
-  color: var(--tinta);
 }
 
 .pixel-topo {
@@ -193,18 +203,33 @@ a:focus-visible {
 /* ---------- 3 · Alta resolução ---------- */
 
 .bloco-alta {
-  height: 100vh;
-  min-height: 640px;
-  background: var(--carvao-fundo);
+  --luz: 0;
+  background:
+    radial-gradient(ellipse 80% 45% at 50% 108%, rgba(255, 90, 31, calc(var(--luz) * 0.34)), transparent 70%),
+    var(--carvao-fundo);
 }
 
-#cv-alta {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  display: block;
-  cursor: none;
+/* o brilho é a mesma imagem, bem borrada e somada por cima */
+.brilho {
+  filter: blur(22px) saturate(1.3) brightness(1.5);
+  mix-blend-mode: screen;
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+#cv-alta { cursor: none; }
+
+/* ---------- 4 · Ondas ---------- */
+
+.bloco-ondas { background: var(--papel); }
+
+/* ---------- 5 · Aurora ---------- */
+
+.bloco-aurora { background: var(--noite); }
+
+.bloco-aurora .titulo-tela {
+  font-size: min(15vw, 30vh);
+  text-shadow: 0 0 60px rgba(4, 7, 11, 0.7);
 }
 
 .aviso-sem-webgl[hidden] { display: none; }
@@ -221,18 +246,53 @@ a:focus-visible {
   font-size: 1.125rem;
 }
 
+/* ---------- 6 · Lava ---------- */
+
+.bloco-lava { background: var(--papel); }
+
+.lava-canvas {
+  position: absolute;
+  display: block;
+  image-rendering: pixelated;
+  cursor: crosshair;
+}
+
+/* a placa de papel segura o texto sobre o campo de pontos */
+.placa {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--e4);
+  width: fit-content;
+  max-width: min(100%, 560px);
+  padding: var(--e6);
+  background: var(--papel);
+  border: 2px solid var(--tinta);
+  box-shadow: 10px 10px 0 var(--tinta);
+  pointer-events: none;
+}
+
+.placa .rotulo { color: var(--brasa-texto); }
+.placa .gigante { font-size: min(11vw, 20vh); }
+
+/* ---------- 7 · Fluxo ---------- */
+
+.bloco-fluxo { background: var(--carvao); }
+
+.bloco-fluxo .titulo-tela { text-shadow: 0 0 60px rgba(13, 11, 10, 0.85); }
+
 /* ---------- Rodapé ---------- */
 
 .bloco-rodape {
   padding: var(--e9) 4vw var(--e6);
   background: var(--papel);
-  color: var(--tinta);
 }
 
 .specs {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--e7);
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--e7) var(--e7);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -249,7 +309,7 @@ a:focus-visible {
   margin: var(--e5) 0 var(--e4);
   font-family: var(--fonte-titulo);
   font-weight: 300;
-  font-size: clamp(40px, 5vw, 120px);
+  font-size: clamp(36px, 3.6vw, 96px);
   line-height: 1;
   letter-spacing: -0.03em;
 }
@@ -282,7 +342,6 @@ a:focus-visible {
       "titulo"
       "apoio";
   }
-  .specs { grid-template-columns: 1fr; }
   .hud-se, .hud-sd { top: var(--e5); }
   .hud-ie, .hud-id { bottom: var(--e5); }
   .hud-se, .hud-ie { left: var(--e5); }
